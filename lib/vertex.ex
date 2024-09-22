@@ -1,26 +1,14 @@
 defmodule Vertex do
   defstruct value: nil,
-            id: Base.encode16(:crypto.strong_rand_bytes(64)),
-            neighbours: MapSet.new([]),
-            neighbour_list: []
+            id: nil,
+            neighbours: MapSet.new([])
 
-  def new(value), do: %Vertex{value: value}
-
-  # def associate(vertex1, vertex2) do
-  #   new_vertex1 = add_neighbour(vertex1, vertex2)
-  #   new_vertex2 = add_neighbour(vertex2, vertex1)
-  #   {new_vertex1, new_vertex2}
-  # end
-  #
-  # def add_neighbours(vertex, neighbour_list) do
-  #   neighbour_list
-  #   |> Enum.reduce(vertex, fn neighbour, updated_vertex ->
-  #     add_neighbour(updated_vertex, neighbour)
-  #   end)
-  # end
+  def new(value) do
+    %Vertex{value: value, id: Base.encode16(:crypto.strong_rand_bytes(64))}
+  end
 
   def add_neighbour(
-        %Vertex{neighbours: neighbours, neighbour_list: neighbour_list} = vertex,
+        %Vertex{neighbours: neighbours} = vertex,
         neighbour
       ) do
     if already_a_neighbour?(neighbours, neighbour) do
@@ -28,8 +16,7 @@ defmodule Vertex do
     else
       %{
         vertex
-        | neighbours: Map.put(neighbours, neighbour.id, neighbour),
-          neighbour_list: [neighbour.id | neighbour_list]
+        | neighbours: MapSet.put(neighbours, neighbour.id)
       }
     end
   end
