@@ -1,7 +1,7 @@
 defmodule GraphTest do
   use ExUnit.Case
 
-  test "Depth-First Search" do
+  setup_all do
     alice = Vertex.new("Alice")
     bob = Vertex.new("Bob")
     candy = Vertex.new("Candy")
@@ -72,7 +72,7 @@ defmodule GraphTest do
       | neighbours: MapSet.new(irena_neighbour_ids)
     }
 
-    graph = %{
+    vertices_map = %{
       alice.id => alice,
       bob.id => bob,
       candy.id => candy,
@@ -84,8 +84,29 @@ defmodule GraphTest do
       irena.id => irena
     }
 
-    # assert Graph.search(:dfs, graph, alice.id, "Irena").id == irena.id
-    # assert Graph.search(:dfs, graph, alice.id, "Helen").id == helen.id
-    assert Graph.search(:dfs, graph, alice.id, "Fred").id == fred.id
+    %{
+      vertices_map: vertices_map,
+      alice: alice,
+      bob: bob,
+      candy: candy,
+      derek: derek,
+      elaine: elaine,
+      fred: fred,
+      gina: gina,
+      helen: helen,
+      irena: irena
+    }
+  end
+
+  test "Depth-First Search", context do
+    %{vertices_map: vertices_map, alice: alice, fred: fred} = context
+    result = Graph.search(:dfs, vertices_map, alice.id, "Fred")
+    assert result.id == fred.id
+  end
+
+  test "Breadth-First Search", context do
+    %{vertices_map: vertices_map, alice: alice, irena: irena} = context
+    result = Graph.search(:bfs, vertices_map, alice.id, "Irena")
+    assert result.id == irena.id
   end
 end

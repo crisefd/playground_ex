@@ -7,7 +7,7 @@ defmodule Queue do
     :queue.in(item, queue)
   end
 
-  def pop({_, []} = queue), do: {nil, queue}
+  def pop({[], []} = queue), do: {nil, queue}
 
   def pop(queue) do
     {{:value, value}, new_queue} = :queue.out(queue)
